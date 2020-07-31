@@ -1,0 +1,113 @@
+---
+# When set, the packages in this list will be used for installing mutt and/or
+# its dependencies instead of the distribution-specific defaults specified
+# in the appropriate file under vars/
+#
+# I don't see too many situations where you'll want to use this value, but it's
+# here just in case.
+mutt_packages: []
+
+# defaults file for dudefellah.mutt
+# You probably want to change these to a more appropriate user
+mutt_owner: ansible
+mutt_group: ansible
+
+# Muttrc filename. Will be placed under the home directory if the filename is a
+# relative path (ie. has no leading '/')
+mutt_rc_filename: .muttrc
+# Mutt directory. This will also be placed under the home directory if the
+# filename is relative
+mutt_dir: .mutt
+
+# Set alternative_order
+mutt_alternative_order: null
+
+# Set auto_view
+mutt_auto_view: null
+
+# List of key bindings each entry has the format
+# - map:
+#     - index
+#     - pager
+#   key: r
+#   function: next-line
+#
+# The above entry would result in:
+# bind index,pager r next-line
+mutt_bindings: []
+
+# Set hdr_order
+mutt_hdr_order: null
+
+# List of hooks. Each entry has the following format:
+# - type: send
+#   match: "~f @myhost.com"
+#   command: set signature=~/.my-signautre
+#
+# This would result in:
+# send-hook "~f @myhost.com" "set signature=~/.my-signature"
+mutt_hooks: []
+
+# Set Ignore headers
+mutt_ignore: null
+
+# A list of macros to be applied to your muttrc
+# Entry format:
+# - map:
+#     - index
+#     - pager
+#   seqence: "<sync-mailbox><enter-command>source ~/.mutt/my-mailbox.muttrc<enter><change-folder>!<enter>"
+#   key: <f2>
+#
+# Results in: macro index,pager "<f2> "<sync-mailbox><enter-command>source ~/.mutt/my-mailbox.muttrc<enter><change-folder>!<enter>"
+mutt_macros: []
+
+# List of mutt reset variables
+mutt_resets: []
+
+# List of set values. Each entry has the following format:
+# - no: false
+#   variable: varname
+#   value: value
+#
+# This results in:
+# set varname = value
+#
+# If 'no' is set to true or "no", then the variable name will be prefixed with
+# 'no'. If 'no' is equal to "inv", then "inv" will be used to prefix the
+# variable name
+mutt_sets: []
+
+# Set source entries. Each entry should be a filename.
+mutt_sources: []
+
+# List of mutt toggle variables
+mutt_toggle: []
+
+# Set unhdr_order
+mutt_unhdr_order: null
+
+# Set Unignore headers
+mutt_unignore: null
+
+# List of unset values, One 'unset' entry per entry in this list
+mutt_unsets: []
+
+# List of unhook statements for removing hooks
+mutt_unhooks: []
+
+# There are plenty of mutt config values that aren't included in this list
+# or the template yet, so they can be just shoved in here.
+# Technically you could do the whole thing with this one value if you'd
+# like.
+mutt_extra_config: ""
+
+# Optional list of extra, external mutt config files.
+# Each _must_ have a mutt_rc_filename entry, which is applied under the same
+# rules as the global mutt_rc_filename value (regarding relative vs absolute
+# paths). All of the other values can be applied into each entry and will be
+# added into the specified mutt_rc_filename file.
+# This just applies these values to the same template as the default .muttrc
+# and can be useful if you want to split up your configuration (don't forget
+# to appropriately source these files in your global config though!)
+mutt_rc_files: []

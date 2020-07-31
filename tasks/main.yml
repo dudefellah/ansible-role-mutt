@@ -1,0 +1,81 @@
+---
+- name: Load platform variables
+  include_vars: "{{ filename }}"
+  vars:
+    vars_files:
+      files:
+        - "{{ role_path }}/vars/{{ ansible_distribution | lower }}/\
+          {{ ansible_distribution_major_version }}.yml"
+        - "{{ role_path }}/vars/{{ ansible_distribution | lower }}/\
+          main.yml"
+        - "{{ role_path }}/vars/{{ ansible_os_family | lower }}/\
+          main.yml"
+        - "{{ role_path }}/vars/main.yml"
+  loop: "{{ q('first_found', vars_files, errors='ignore') }}"
+  loop_control:
+    loop_var: filename
+
+- name: Load platform dependencies
+  vars:
+    tasks:
+      files:
+        - "{{ role_path }}/tasks/dependencies/\
+          {{ ansible_distribution | lower }}/\
+          {{ ansible_distribution_major_version }}.yml"
+        - "{{ role_path }}/tasks/dependencies/\
+          {{ ansible_distribution | lower }}/\
+          main.yml"
+        - "{{ role_path }}/tasks/dependencies/\
+          {{ ansible_os_family | lower }}.yml"
+        - "{{ role_path }}/tasks/dependencies/main.yml"
+  include_tasks: "{{ filename }}"
+  loop: "{{ q('first_found', tasks, errors='ignore') }}"
+  loop_control:
+    loop_var: filename
+
+# If we can't lookup the user, we don't want to continue
+# I don't want this role to be responsible for accidentally creating
+# users but I do want to use the user module to gather the user
+# home directory in an Ansible-y way
+- name: Test for user existence
+  command: >
+    getent passwd {{ mutt_owner }}
+  changed_when: false
+
+- name: Set details on the selected user
+  user:
+    name: "{{ mutt_owner }}"
+  register: configured_user
+
+- name: Set a value for the full config file path
+  set_fact:
+    _muttrc_abspath: "{{ mutt_rc_filename }}"
+
+- name: If the mutt_rc_filename isn't absolute, place it under the user home
+  set_fact:
+    _muttrc_abspath: "{{ configured_user.home }}/{{ mutt_rc_filename }}"
+  when:
+    - "not mutt_rc_filename.startswith('/')"
+
+- name: Look for existing mutt config file directory
+  stat:
+    path: "{{ _muttrc_abspath | dirname }}"
+  register: mutt_dir_stat
+
+- name: Ensure the muttrc directory exists
+  file:
+    path: "{{ _muttrc_abspath | dirname }}"
+    state: directory
+    owner: "{{ mutt_owner }}"
+    group: "{{ mutt_group }}"
+    mode: "0700"
+  when:
+    - "not mutt_dir_stat.stat.exists"
+
+- name: Install main muttrc
+  template:
+    src: muttrc.j2
+    dest: "{{ _muttrc_abspath }}"
+    owner: "{{ mutt_owner }}"
+    group: "{{ mutt_group }}"
+    mode: "0600"

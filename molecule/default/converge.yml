@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - block:
+        - name: "Include ansible-role-mutt"
+          include_role:
+            name: "ansible-role-mutt"
+          vars:
+            mutt_owner: testuser
+            mutt_group: testuser
+      become: true

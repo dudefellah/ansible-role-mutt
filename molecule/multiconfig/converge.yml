@@ -1,0 +1,128 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+
+    - name: "Include ansible-role-mutt"
+      include_role:
+        name: "ansible-role-mutt"
+      vars:
+        mutt_rc_filename: ".mutt/gpg.include"
+        mutt_owner: testuser
+        mutt_group: testuser
+        mutt_sets:
+          - variable: crypt_use_gpgme
+            value: "yes"
+          - variable: pgp_decode_command
+            value: "gpg --status-fd=2 %?p?--passphrase-fd 0 --pinentry-mode=loopback? --no-verbose --quiet --batch --output - %f"
+          - variable: pgp_verify_command
+            value: "gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
+          - variable: pgp_decrypt_command
+            value: "gpg --status-fd=2 %?p?--passphrase-fd 0 --pinentry-mode=loopback? --no-verbose --quiet --batch --output - %f"
+          - variable: pgp_sign_command
+            value: "gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0 --pinentry-mode=loopback? --armor --detach-sign --textmode %?a?-u %a? %f"
+          - variable: pgp_clearsign_command
+            value: "gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0 --pinentry-mode=loopback? --armor --textmode --clearsign %?a?-u %a? %f"
+          - variable: pgp_encrypt_only_command
+            value: "/usr/lib/mutt/pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+          - variable: pgp_encrypt_sign_command
+            value: "/usr/lib/mutt/pgpewrap gpg %?p?--passphrase-fd 0 --pinentry-mode=loopback? --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+          - variable: pgp_import_command
+            value: "gpg --no-verbose --import %f"
+          - variable: pgp_export_command
+            value: "gpg --no-verbose --export --armor %r"
+          - variable: pgp_verify_key_command
+            value: "gpg --verbose --batch --fingerprint --check-sigs %r"
+          - variable: pgp_list_pubring_command
+            value: "gpg --no-verbose --batch --quiet --with-colons --with-fingerprint --with-fingerprint --list-keys %r"
+          - variable: pgp_list_secring_command
+            value: "gpg --no-verbose --batch --quiet --with-colons --with-fingerprint --with-fingerprint --list-secret-keys %r"
+          - variable: pgp_good_sign
+            value: "^\\[GNUPG:\\] GOODSIG"
+          - variable: pgp_check_gpg_decrypt_status_fd
+    - name: "Include ansible-role-mutt"
+      include_role:
+        name: "ansible-role-mutt"
+      vars:
+        mutt_rc_filename: ".mutt/myhost.com"
+        mutt_owner: testuser
+        mutt_group: testuser
+        mutt_sets:
+          - variable: smtp_url
+            value: "smtp://bob@nobodyexample.ca@smtp.nobodyexample.ca:587/"
+          - variable: smtp_pass
+            value: abc123
+          - variable: from
+            value: "bob@nobodyexample.ca"
+          - variable: realname
+            value: "Bob Bobbington"
+          - variable: imap_user 
+            value: "bob@bobnobody.ca"
+          - variable: imap_pass
+            value: imap123
+          - variable: folder
+            value: "imaps://mail.nobodyexample.ca"
+          - variable: spoolfile
+            value: "+INBOX"
+          - variable: record
+            value: "+Sent"
+          - variable: postponed
+            value: "+Drafts"
+          - variable: trash
+            value: "+Deleted"
+          - variable: header_cache
+            value: "~/.cache/mutt/nobodyexample.ca/headers"
+          - variable: message_cachedir
+            value: "~/.cache/mutt/nobodyexample.ca/bodies"
+          - variable: certificate_file
+            value: "~/.cache/mutt/nobodyexample.ca/certificates"
+          - variable: move
+            value: "no"
+          - variable: ssl_starttls
+            value: "yes"
+          - variable: ssl_force_tls
+            value: "yes"
+          - variable: imap_check_subscribed
+          - variable: mail_check
+            value: 60
+          - variable: timeout
+            value: 10
+          - variable: net_inc
+            value: 1
+          - variable: envelope_from
+          - variable: edit_headers
+          - variable: fast_reply
+          - variable: askcc
+          - variable: fcc_attach
+          - variable: forward_format
+            value: "Fwd: %s"
+          - variable: forward_decode
+          - variable: attribution
+            value: "On %d, %n wrote:"
+          - variable: reply_to
+          - variable: reverse_name
+          - variable: include
+          - variable: forward_quote
+          - variable: text_flowed
+          - variable: query_command
+            value: "( khard email --parsable '%s' | sed -n '1!p'; mu cfind --format=mutt-ab '%s' )"
+          - variable: my_hdr
+            value: "X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x5F5FB1DFE891C282"
+          - variable: pgp_replyencrypt
+          - variable: pgp_replysign
+          - variable: pgp_replysignencrypted
+          - variable: pgp_show_unusable
+            value: "no"
+          - variable: pgp_autosign
+          - variable: pgp_sign_as
+            value: "6306081AF4BB430271AC661A5F5FB1DFE891C282"
+    - name: "Include ansible-role-mutt"
+      include_role:
+        name: "ansible-role-mutt"
+      vars:
+        mutt_rc_filename: ".muttrc"
+        mutt_owner: testuser
+        mutt_group: testuser
+        mutt_sources:
+          - ".mutt/gpg.include"
+          - ".mutt/myhost.com"

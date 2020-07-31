@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Install python
+      raw: >
+        apt-get update && apt-get -y install python sudo
+
+    - name: Create the test user group
+      group:
+        name: testuser
+        gid: 1000
+      become: true
+
+    - name: Create user for testing mutt config
+      user:
+        name: testuser
+        group: testuser
+      become: true

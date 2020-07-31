@@ -1,0 +1,70 @@
+# {{ ansible_managed }}
+
+{% if mutt_sources is defined %}
+{% for s in mutt_sources %}
+source {{ s | quote }}
+{% endfor %}
+{% endif %}
+
+{%- if (mutt_ignore is defined) and mutt_ignore is not none %}
+ignore {{ mutt_ignore }}
+{% endif %}
+
+{%- if (mutt_unignore is defined) and (mutt_unignore is not none) %}
+unignore {{ mutt_unignore }}
+{% endif %}
+
+{%- if (mutt_unhdr_order is defined) and (mutt_unhdr_order is not none) %}
+unhdr_order {{ mutt_unhdr_order }}
+{% endif %}
+
+{%- if (mutt_hdr_order is defined) and (mutt_hdr_order is not none) %}
+hdr_order {{ mutt_hdr_order | quote }}
+{% endif %}
+
+{%- if (mutt_alternative_order is defined) and (mutt_alternative_order is not none) %}
+alternative_order {{ mutt_alternative_order }}
+{% endif %}
+
+{%- if (mutt_auto_view is defined) and (mutt_auto_view is not none) %}
+auto_view {{ mutt_auto_view }}
+{% endif %}
+
+{% if mutt_bindings is defined %}
+{% for b in mutt_bindings %}
+bind {{ b.map | join(",") }} {{ b.key }} {{ b.function }}
+{% endfor %}
+{% endif %}
+
+{% if mutt_macros is defined %}
+{% for m in mutt_macros %}
+macro {{ m.map | join(",") }} {{ m.key | quote }} {{ m.sequence | quote }} {{ m.description | default("") | quote }}
+{% endfor %}
+{% endif %}
+
+{% if (mutt_unsets is defined) and (mutt_unsets is not none) %}
+{% for u in mutt_unsets %}
+unset {{ u }}
+{% endfor %}
+{% endif %}
+
+{% if (mutt_sets is defined) and (mutt_sets is not none) %}
+{% for s in mutt_sets %}
+set {{ s.variable }}{% if 'value' in s %} = {{ s.value | quote }}{% endif %}
+
+{% endfor %}
+{% endif %}
+
+{% if mutt_hooks is defined %}
+{% for hook_type in mutt_hooks %}
+{% for hook in mutt_hooks[hook_type] %}
+{{ hook_type }}-hook "{{ hook.match }}" {{ hook.command }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if mutt_extra_config is defined %}
+{% if mutt_extra_config %}
+{{ mutt_extra_config }}
+{% endif %}
+{% endif %}

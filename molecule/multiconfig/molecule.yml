@@ -1,0 +1,24 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: mutt-molecule-debian-buster-instance
+    image: debian:buster-slim
+    pre_build_image: true
+  - name: mutt-molecule-debian-stretch-insance
+    image: debian:stretch-slim
+    pre_build_image: true
+  - name: mutt-molecule-ubuntu-20-04-instance
+    image: ubuntu:20.04
+    pre_build_image: true
+  - name: mutt-molecule-ubuntu-20-10-instance
+    image: ubuntu:20.10
+    pre_build_image: true
+provisioner:
+  name: ansible
+  playbooks:
+    name: prepare.yml
+verifier:
+  name: testinfra
