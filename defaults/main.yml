@@ -101,13 +101,3 @@ mutt_unhooks: []
 # Technically you could do the whole thing with this one value if you'd
 # like.
 mutt_extra_config: ""
-
-# Optional list of extra, external mutt config files.
-# Each _must_ have a mutt_rc_filename entry, which is applied under the same
-# rules as the global mutt_rc_filename value (regarding relative vs absolute
-# paths). All of the other values can be applied into each entry and will be
-# added into the specified mutt_rc_filename file.
-# This just applies these values to the same template as the default .muttrc
-# and can be useful if you want to split up your configuration (don't forget
-# to appropriately source these files in your global config though!)
-mutt_rc_files: []
