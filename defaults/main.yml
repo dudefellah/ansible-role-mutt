@@ -72,10 +72,6 @@ mutt_resets: []
 #
 # This results in:
 # set varname = value
-#
-# If 'no' is set to true or "no", then the variable name will be prefixed with
-# 'no'. If 'no' is equal to "inv", then "inv" will be used to prefix the
-# variable name
 mutt_sets: []
 
 # Set source entries. Each entry should be a filename.
