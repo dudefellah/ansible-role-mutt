@@ -38,7 +38,7 @@ bind {{ b.map | join(",") }} {{ b.key }} {{ b.function }}
 
 {% if mutt_macros is defined %}
 {% for m in mutt_macros %}
-macro {{ m.map | join(",") }} {{ m.key | quote }} {{ m.sequence | quote }} {{ m.description | default("") | quote }}
+macro {{ m.map | join(",") }} {{ m.key }} {{ m.sequence | quote }} {{ m.description | default("") | quote }}
 {% endfor %}
 {% endif %}
 
