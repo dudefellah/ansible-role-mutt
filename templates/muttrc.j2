@@ -26,8 +26,10 @@ hdr_order {{ mutt_hdr_order | quote }}
 alternative_order {{ mutt_alternative_order }}
 {% endif %}
 
-{%- if (mutt_auto_view is defined) and (mutt_auto_view is not none) %}
-auto_view {{ mutt_auto_view }}
+{%- if mutt_auto_view is defined %}
+{% for av in mutt_auto_view|default([]) %}
+auto_view {{ av }}
+{% endfor %}
 {% endif %}
 
 {% if mutt_bindings is defined %}
@@ -42,16 +44,16 @@ macro {{ m.map | join(",") }} {{ m.key }} {{ m.sequence | quote }} {{ m.descript
 {% endfor %}
 {% endif %}
 
-{% if (mutt_unsets is defined) and (mutt_unsets is not none) %}
-{% for u in mutt_unsets %}
-unset {{ u }}
-{% endfor %}
-{% endif %}
-
 {% if (mutt_sets is defined) and (mutt_sets is not none) %}
 {% for s in mutt_sets %}
 set {{ s.variable }}{% if 'value' in s %} = {{ s.value | quote }}{% endif %}
 
+{% endfor %}
+{% endif %}
+
+{% if (mutt_unsets is defined) and (mutt_unsets is not none) %}
+{% for u in mutt_unsets %}
+unset {{ u }}
 {% endfor %}
 {% endif %}
 
