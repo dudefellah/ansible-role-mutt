@@ -1,0 +1,16 @@
+---
+name: Molecule
+on:
+  pull_request:
+    types: closed
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: molecule
+        uses: robertdebock/molecule-action@2.6.3
